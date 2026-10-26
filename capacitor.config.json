@@ -1,5 +1,8 @@
 {
   "appId": "com.recallman.app",
   "appName": "RecallMan",
-  "webDir": "www"
+  "webDir": "www",
+  "android": {
+    "adjustMarginsForEdgeToEdge": "force"
+  }
 }
