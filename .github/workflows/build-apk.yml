@@ -68,6 +68,25 @@ jobs:
           npx capacitor-assets generate --android
           npx cap sync android
 
+      - name: Fix status/navigation bar colors and icon contrast
+        run: |
+          python3 - <<'PY'
+          import re, sys
+          p = 'android/app/src/main/res/values/styles.xml'
+          s = open(p, encoding='utf-8').read()
+          add = (
+              '        <item name="android:windowBackground">#EEF3F8</item>\n'
+              '        <item name="android:windowLightStatusBar">true</item>\n'
+              '        <item name="android:windowLightNavigationBar">true</item>\n'
+          )
+          m = re.search(r'(<style name="AppTheme\.NoActionBar"[^>]*>)(.*?)(</style>)', s, re.S)
+          if not m:
+              print('AppTheme.NoActionBar style not found'); sys.exit(1)
+          s = s[:m.end(2)] + add + s[m.end(2):]
+          open(p, 'w', encoding='utf-8').write(s)
+          print(s)
+          PY
+
       - name: Set version (always increases so it installs over the old one)
         run: |
           N=${{ github.run_number }}
